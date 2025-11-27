@@ -1,0 +1,26 @@
+name: Slither Analysis
+
+# 1. Cấu hình Trigger: Chạy khi có lệnh PUSH vào nhánh main
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      # Bước 1: Checkout code từ Repo về máy chủ Runner
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Bước 2: Chạy Slither Security Scan
+      - name: Run Slither
+        uses: crytic/slither-action@v0.3.0
+        id: slither
+        with:
+          # Cấu hình quan trọng: Chỉ đánh fail nếu phát hiện lỗi HIGH
+          fail-on: high 
+          # Tùy chọn: Bỏ qua lỗi biên dịch solc version (để tránh bị fail oan như lúc nãy)
+          ignore-compile: true
